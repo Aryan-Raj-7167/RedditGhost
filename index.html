@@ -59,6 +59,7 @@
     .alert.on{display:block;}
     .alert.error{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#f87171;}
     .alert.info{background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.3);color:#93c5fd;}
+    .alert.warn{background:rgba(234,179,8,.07);border:1px solid rgba(234,179,8,.3);color:#fbbf24;font-size:.8rem;}
 
     /* PROFILE */
     .profile-bar{display:none;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:16px;align-items:center;justify-content:space-between;gap:12px;}
@@ -92,6 +93,12 @@
     .post-list{display:flex;flex-direction:column;gap:12px;}
     .card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;transition:border-color .2s,box-shadow .2s;animation:fadeUp .25s ease both;}
     .card:hover{border-color:var(--accent);box-shadow:var(--shadow);}
+    .card.pinned{border-color:rgba(255,180,0,0.4);background:rgba(255,180,0,0.04);}
+    .card.pinned:hover{border-color:rgba(255,180,0,0.8);}
+    .pin-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(255,180,0,0.12);border:1px solid rgba(255,180,0,0.4);color:#f5c842;font-size:.68rem;font-weight:600;padding:2px 8px;border-radius:20px;margin-bottom:8px;}
+    .pinned-toggle{display:inline-flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);border-radius:8px;padding:5px 12px;font-size:0.78rem;font-family:inherit;font-weight:500;cursor:pointer;transition:all .2s;white-space:nowrap;}
+    .pinned-toggle:hover{border-color:rgba(255,180,0,0.6);color:#f5c842;}
+    .pinned-toggle.active{background:rgba(255,180,0,0.1);border-color:rgba(255,180,0,0.5);color:#f5c842;}
     @keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
     .card-title{font-size:.95rem;font-weight:600;line-height:1.4;margin-bottom:8px;}
     .card-title a{color:var(--text);text-decoration:none;}
@@ -103,16 +110,32 @@
     .card-body{font-size:.85rem;color:var(--text2);line-height:1.6;margin-bottom:10px;word-break:break-word;}
     .card-foot{display:flex;align-items:center;gap:12px;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:.8rem;color:var(--text3);}
     .card-score{display:flex;align-items:center;gap:4px;}
+    .card-comments{display:flex;align-items:center;gap:4px;}
     .arrow{color:var(--accent);font-size:.7rem;}
     .card-time{flex:1;}
     .card-open{display:inline-flex;align-items:center;gap:4px;color:var(--accent);font-weight:600;font-size:.8rem;text-decoration:none;padding:5px 12px;border:1px solid var(--accent);border-radius:8px;transition:background .15s;white-space:nowrap;}
     .card-open:hover{background:var(--accent-dim);}
+    .post-type{display:inline-flex;align-items:center;gap:4px;font-size:.68rem;font-weight:600;padding:2px 8px;border-radius:20px;margin-left:6px;vertical-align:middle;}
+    .post-type.text{background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.3);color:#a5b4fc;}
+    .post-type.image{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);color:#86efac;}
+    .post-type.video{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);color:#fca5a5;}
+    .post-type.gallery{background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.25);color:#d8b4fe;}
+    .post-type.link{background:rgba(234,179,8,.1);border:1px solid rgba(234,179,8,.25);color:#fde68a;}
     .empty{text-align:center;color:var(--text3);padding:40px 20px;font-size:.9rem;}
 
-    /* LOAD MORE */
-    .load-more{display:none;width:100%;margin-top:16px;background:transparent;border:1px solid var(--border);color:var(--text2);border-radius:var(--radius);padding:14px;font-family:inherit;font-size:.9rem;cursor:pointer;transition:all .2s;}
-    .load-more:hover{border-color:var(--accent);color:var(--accent);}
-    .load-more:disabled{opacity:.5;cursor:not-allowed;}
+    /* SUBREDDIT FILTER TAGS */
+    .sub-filter{display:none;margin-top:10px;}
+    .sub-filter.on{display:block;}
+    .sub-filter-header{display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;margin-bottom:8px;}
+    .sub-filter-label{font-size:0.7rem;font-weight:600;letter-spacing:.1em;color:var(--text3);text-transform:uppercase;}
+    .sub-filter-arrow{font-size:0.7rem;color:var(--text3);transition:transform .2s;}
+    .sub-filter.collapsed .sub-filter-arrow{transform:rotate(180deg);}
+    .sub-filter.collapsed .sub-tags{display:none;}
+    .sub-tags{display:flex;flex-wrap:wrap;gap:6px;}
+    .sub-tag{background:var(--bg2);border:1px solid var(--border);color:var(--text2);border-radius:20px;padding:4px 12px;font-size:0.75rem;font-family:'JetBrains Mono',monospace;font-weight:500;cursor:pointer;transition:all .15s;white-space:nowrap;}
+    .sub-tag:hover{border-color:var(--accent);color:var(--accent);}
+    .sub-tag.active{background:var(--accent-dim);border-color:var(--accent);color:var(--accent);}
+    .sub-tag.profile{border-style:dashed;}
 
     @media(max-width:480px){
         .input-row{flex-direction:column;}
@@ -142,16 +165,25 @@
             <button class="search-btn" id="searchBtn" onclick="startSearch()">Search</button>
         </div>
         <div class="sort-row">
-            <button class="sort-chip active" data-sort="new"       onclick="setSort('new')">New</button>
+            <button class="sort-chip active" data-sort="relevance" onclick="setSort('relevance')">Relevance</button>
+            <button class="sort-chip"        data-sort="new"       onclick="setSort('new')">New</button>
+            <button class="sort-chip"        data-sort="old"       onclick="setSort('old')">Old</button>
             <button class="sort-chip"        data-sort="top"       onclick="setSort('top')">Top</button>
             <button class="sort-chip"        data-sort="hot"       onclick="setSort('hot')">Hot</button>
-            <button class="sort-chip"        data-sort="relevance" onclick="setSort('relevance')">Relevance</button>
-            <button class="sort-chip"        data-sort="comments"  onclick="setSort('comments')">Most Comments</button>
+            <button class="sort-chip"        data-sort="comments"  onclick="setSort('comments')">Most Commented</button>
+        </div>
+        <div class="sub-filter" id="subFilter">
+            <div class="sub-filter-header" onclick="toggleSubFilter()">
+                <span class="sub-filter-label">Filter by Subreddit</span>
+                <span class="sub-filter-arrow">▲</span>
+            </div>
+            <div class="sub-tags" id="subTags"></div>
         </div>
     </div>
 
     <div class="status" id="statusBar"><div class="spin"></div><span id="statusText"></span></div>
     <div class="alert" id="alertBox"></div>
+    <div class="alert warn" id="fetchNotice" style="display:none">⚠️ Reddit's search index may not return every post — some older or less indexed posts might be missing from these results.</div>
 
     <div class="account-info" id="accountInfo">
         <div class="account-header">
@@ -183,16 +215,18 @@
     <div class="profile-bar" id="profileCard">
         <div class="profile-left">
             <span class="profile-name" id="profileName"></span>
-            <span class="hidden-badge">Hidden</span>
+            <span class="hidden-badge" id="hiddenBadge" style="display:none">Hidden</span>
         </div>
-        <div class="stat-block">
-            <span class="stat-val" id="statPosts">0</span>
-            <span class="stat-lbl">Posts found</span>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;">
+            <button class="pinned-toggle active" id="pinnedToggle" style="display:none" onclick="togglePinned()">📌 Pinned</button>
+            <div class="stat-block">
+                <span class="stat-val" id="statPosts">0</span>
+                <span class="stat-lbl">Posts found</span>
+            </div>
         </div>
     </div>
 
     <div class="post-list" id="postsList"></div>
-    <button class="load-more" id="loadMoreBtn" onclick="loadMore()">Load more</button>
 
     <div style="margin-top:40px;padding:20px;text-align:center;font-size:0.8rem;color:var(--text3);border-top:1px solid var(--border);">
         <p style="margin-bottom:8px;">Created by <a href="https://reddit.com/u/Aryan_Raj_7167" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;">u/Aryan_Raj_7167</a></p>
@@ -202,11 +236,14 @@
 
 <script>
     let currentUser = '';
-    let currentSort = 'new';
+    let currentSort = 'relevance';
     let afterToken  = null;
     let allPosts    = [];
+    let pinnedPosts = [];
     let seenIds     = new Set();
     let currentTheme = 'system';
+    let showPinned  = true;
+    let selectedSubreddits = new Set();
 
     function getSystemTheme() {
         return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
@@ -253,6 +290,39 @@
         });
     }
 
+    function applySortToAllPosts(sort) {
+        let posts = selectedSubreddits.size > 0
+            ? allPosts.filter(p => selectedSubreddits.has(p.data.subreddit.toLowerCase()))
+            : allPosts.slice();
+
+        if (sort === 'new') {
+            posts.sort((a, b) => b.data.created_utc - a.data.created_utc);
+        } else if (sort === 'old') {
+            posts.sort((a, b) => a.data.created_utc - b.data.created_utc);
+        } else if (sort === 'top') {
+            posts.sort((a, b) => b.data.score - a.data.score);
+        } else if (sort === 'hot') {
+            posts.sort((a, b) => b.data.upvote_ratio - a.data.upvote_ratio || b.data.score - a.data.score);
+        } else if (sort === 'comments') {
+            posts.sort((a, b) => b.data.num_comments - a.data.num_comments);
+        }
+
+        if (showPinned && pinnedPosts.length > 0) {
+            const pinnedIds = new Set(pinnedPosts.map(p => p.data.id));
+            const nonPinned = posts.filter(p => !pinnedIds.has(p.data.id));
+            renderPosts([...pinnedPosts, ...nonPinned]);
+        } else {
+            renderPosts(posts);
+        }
+    }
+
+    function togglePinned() {
+        showPinned = !showPinned;
+        const btn = $('pinnedToggle');
+        btn.classList.toggle('active', showPinned);
+        applySortToAllPosts(currentSort);
+    }
+
     function setSort(sort) {
         currentSort = sort;
         document.querySelectorAll('.sort-chip').forEach(c => {
@@ -260,35 +330,8 @@
         });
 
         if (currentUser && $('profileCard').classList.contains('on')) {
-            reloadWithNewSort();
-        }
-    }
-
-    async function reloadWithNewSort() {
-        afterToken = null;
-        seenIds = new Set();
-        allPosts = [];
-
-        pushParams(currentUser, currentSort);
-
-        $('postsList').innerHTML = '';
-        $('loadMoreBtn').style.display = 'none';
-        hideAlert();
-
-        try {
-            setStatus('Fetching posts…');
-            allPosts = await fetchPosts(currentUser, currentSort, null);
-            hideStatus();
-
-            updateStats();
-            renderPosts(allPosts, false);
-            $('loadMoreBtn').style.display = afterToken ? 'block' : 'none';
-
-            if (!allPosts.length)
-                showAlert('No posts found with this sort order.', 'info');
-        } catch(err) {
-            hideStatus();
-            showAlert('Error: ' + err.message, 'error');
+            pushParams(currentUser, currentSort);
+            applySortToAllPosts(sort);
         }
     }
 
@@ -351,27 +394,24 @@
 
     async function isHidden(u) {
         try {
-            const d = await apiFetch('https://api.reddit.com/user/' + encodeURIComponent(u) + '/submitted');
+            const d = await apiFetch('https://api.reddit.com/user/' + encodeURIComponent(u) + '/submitted?limit=100');
 
-            if (!d || !d.data) return false;
+            if (!d || !d.data) return { hidden: false, pinned: [] };
 
             const children = d.data.children || [];
 
-            if (children.length === 0) return true;
+            if (children.length === 0) return { hidden: true, pinned: [] };
 
-            // A profile is hidden only if ALL posts are in the user's own profile subreddit
-            // (subreddit_type === 'user'). Any real subreddit post means it's not hidden.
-            const nonProfilePosts = children.filter(child => {
-                return child.data && child.data.subreddit_type !== 'user';
-            });
+            const nonProfilePosts = children.filter(c => c.data && c.data.subreddit_type !== 'user');
+            const pinned = children.filter(c => c.data && c.data.subreddit_type === 'user' && c.data.pinned === true);
 
-            return nonProfilePosts.length === 0;
-        } catch(e) { return false; }
+            return { hidden: nonProfilePosts.length === 0, pinned };
+        } catch(e) { return { hidden: false, pinned: [] }; }
     }
 
     async function fetchPosts(username, sort, after) {
-        const q   = encodeURIComponent('author:"' + username + '"');
-        let   url = 'https://api.reddit.com/search/?q=' + q + '&sort=' + sort + '&limit=25';
+        const q = 'author:"' + username + '"';
+        let url = 'https://api.reddit.com/search/?q=' + encodeURIComponent(q) + '&sort=' + sort + '&limit=25';
         if (after) url += '&after=' + after;
 
         const data = await apiFetch(url);
@@ -421,7 +461,6 @@
         return Math.floor(diff / y) + 'y ago';
     }
 
-    // Extract preview URLs from reddit preview data and post body
     function extractPreviewUrl(d) {
         if (d.preview && d.preview.images && d.preview.images[0]) {
             const img = d.preview.images[0];
@@ -497,7 +536,6 @@
         return '';
     }
 
-    // Minimal markdown renderer for Reddit post bodies
     function renderMarkdown(text) {
         if (!text) return '';
         text = decodeHtmlEntities(text);
@@ -533,11 +571,21 @@
         return t;
     }
 
+    function getPostType(d) {
+        if (d.is_video || (d.media && d.media.reddit_video)) return { type: 'video', label: 'Video' };
+        if (d.is_gallery || d.media_metadata) return { type: 'gallery', label: 'Gallery' };
+        if (d.post_hint === 'image' || (d.url && /\.(jpg|jpeg|png|gif|webp)$/i.test(d.url))) return { type: 'image', label: 'Image' };
+        if (d.is_self || d.selftext) return { type: 'text', label: 'Text' };
+        return { type: 'link', label: 'Link' };
+    }
+
     function renderPost(p) {
         const d   = p.data;
         const url = 'https://reddit.com' + d.permalink;
         const sub = d.subreddit_name_prefixed || ('r/' + d.subreddit);
         const media = getMediaHtml(d);
+        const isPinned = d.pinned === true;
+        const { type, label } = getPostType(d);
 
         const bodyText = d.selftext || '';
         const isJustUrl = /^https?:\/\/\S+$/.test(bodyText.trim());
@@ -546,30 +594,34 @@
             ? '<div class="card-body">' + renderMarkdown(bodyText) + '</div>'
             : '';
 
-        return '<div class="card">' +
+        const pinBadge = isPinned ? '<div class="pin-badge">📌 Pinned</div>' : '';
+        const typeBadge = '<span class="post-type ' + type + '">' + label + '</span>';
+        const comments = d.num_comments || 0;
+
+        return '<div class="card' + (isPinned ? ' pinned' : '') + '">' +
+            pinBadge +
             '<div class="card-title"><a href="' + url + '" target="_blank" rel="noopener">' + esc(d.title || 'Untitled') + '</a></div>' +
-            '<span class="card-sub">' + esc(sub) + '</span>' +
+            '<span class="card-sub">' + esc(sub) + '</span>' + typeBadge +
             media + body +
             '<div class="card-foot">' +
                 '<span class="card-score"><span class="arrow">▲</span>' + (d.score||0) + '</span>' +
+                '<span class="card-comments">💬 ' + comments + '</span>' +
                 '<span class="card-time">' + timeAgo(d.created_utc) + '</span>' +
                 '<a class="card-open" href="' + url + '" target="_blank" rel="noopener">Open ↗</a>' +
             '</div></div>';
     }
 
-    function renderPosts(posts, append) {
-        const el = $('postsList');
-        if (!append) {
-            el.innerHTML = posts.length
-                ? posts.map(renderPost).join('')
-                : '<div class="empty">No posts found for this user.</div>';
-        } else if (posts.length) {
-            el.insertAdjacentHTML('beforeend', posts.map(renderPost).join(''));
-        }
+    function renderPosts(posts) {
+        $('postsList').innerHTML = posts.length
+            ? posts.map(renderPost).join('')
+            : '<div class="empty">No posts found for this user.</div>';
     }
 
     function updateStats() {
-        $('statPosts').textContent = allPosts.length + (afterToken ? '+' : '');
+        const count = selectedSubreddits.size > 0
+            ? allPosts.filter(p => selectedSubreddits.has(p.data.subreddit.toLowerCase())).length
+            : allPosts.length;
+        $('statPosts').textContent = count + (afterToken ? '+' : '');
     }
 
     function formatNumber(num) {
@@ -594,8 +646,6 @@
     }
 
     function displayAccountInfo(userData, isHidden) {
-        const accountInfo = $('accountInfo');
-
         let pfp = userData.icon_img || userData.snoovatar_img || 'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_1.png';
         pfp = pfp.replace(/&amp;/g, '&');
         $('accountPfp').src = pfp;
@@ -614,12 +664,8 @@
         }
 
         const about = (userData.subreddit && userData.subreddit.public_description) || '';
-        if (about) {
-            $('accountAbout').textContent = decodeHtmlEntities(about);
-            $('accountAbout').style.display = 'block';
-        } else {
-            $('accountAbout').style.display = 'none';
-        }
+        $('accountAbout').textContent = about ? decodeHtmlEntities(about) : '';
+        $('accountAbout').style.display = about ? 'block' : 'none';
 
         $('totalKarma').textContent = formatNumber(userData.total_karma || 0);
         $('postKarma').textContent = formatNumber(userData.link_karma || 0);
@@ -631,32 +677,89 @@
         });
         $('accountAge').textContent = 'Account created: ' + createdDate + ' (' + accountAge + ' old)';
 
-        accountInfo.className = 'account-info on';
+        $('accountInfo').className = 'account-info on';
     }
 
     function getParams() {
         const p = new URLSearchParams(window.location.search);
-        return { username: p.get('username') || '', sort: p.get('sort') || 'new' };
+        return { username: p.get('username') || '', sort: p.get('sort') || 'relevance' };
     }
 
     function pushParams(u, s) {
         const p = new URLSearchParams();
         p.set('username', u);
-        if (s && s !== 'new') p.set('sort', s);
+        p.set('sort', s || 'relevance');
         history.pushState({}, '', window.location.pathname + '?' + p.toString());
     }
 
-    async function loadMore() {
-        const btn = $('loadMoreBtn');
-        btn.disabled = true; btn.textContent = 'Loading…';
-        try {
-            const items = await fetchPosts(currentUser, currentSort, afterToken);
-            allPosts = allPosts.concat(items);
-            renderPosts(items, true);
+    function toggleSubFilter() {
+        const el = $('subFilter');
+        el.classList.toggle('collapsed');
+    }
+
+    function buildSubredditTags() {
+        const profileSub = 'u_' + currentUser.toLowerCase();
+        const counts = {};
+        allPosts.forEach(p => {
+            const sub = p.data.subreddit;
+            counts[sub] = (counts[sub] || 0) + 1;
+        });
+
+        const subs = Object.keys(counts).sort((a, b) => {
+            const aIsProfile = a.toLowerCase() === profileSub;
+            const bIsProfile = b.toLowerCase() === profileSub;
+            if (aIsProfile) return -1;
+            if (bIsProfile) return 1;
+            return a.toLowerCase().localeCompare(b.toLowerCase());
+        });
+
+        const container = $('subTags');
+        container.innerHTML = subs.map(sub => {
+            const isProfile = sub.toLowerCase() === profileSub;
+            const label = isProfile ? 'u/' + currentUser : 'r/' + sub;
+            return '<button class="sub-tag' + (isProfile ? ' profile' : '') + '" data-sub="' + esc(sub.toLowerCase()) + '" onclick="toggleSubredditTag(this)">' +
+                esc(label) + ' <span style="opacity:.55;font-size:.7em">(' + counts[sub] + ')</span></button>';
+        }).join('');
+
+        $('subFilter').className = subs.length > 1 ? 'sub-filter on' : 'sub-filter';
+    }
+
+    function toggleSubredditTag(btn) {
+        const sub = btn.dataset.sub;
+        if (selectedSubreddits.has(sub)) {
+            selectedSubreddits.delete(sub);
+            btn.classList.remove('active');
+        } else {
+            selectedSubreddits.add(sub);
+            btn.classList.add('active');
+        }
+        applySortToAllPosts(currentSort);
+        updateStats();
+    }
+
+    async function fetchAllPosts(username) {
+        afterToken = null;
+        seenIds = new Set();
+        allPosts = [];
+
+        const firstPage = await fetchPosts(username, 'relevance', null);
+        allPosts = firstPage;
+        applySortToAllPosts(currentSort);
+        buildSubredditTags();
+        updateStats();
+
+        let page = 1;
+        while (afterToken) {
+            page++;
+            setStatus('Fetching posts… (page ' + page + ')');
+            await new Promise(r => setTimeout(r, 600));
+            const more = await fetchPosts(username, 'relevance', afterToken);
+            if (!more.length) break;
+            allPosts = allPosts.concat(more);
+            applySortToAllPosts(currentSort);
+            buildSubredditTags();
             updateStats();
-            btn.style.display = afterToken ? 'block' : 'none';
-        } catch(e) { showAlert('Failed to load more: ' + e.message, 'error'); }
-        btn.disabled = false; btn.textContent = 'Load more';
+        }
     }
 
     async function startSearch() {
@@ -668,12 +771,28 @@
         afterToken  = null;
         seenIds     = new Set();
         allPosts    = [];
+        pinnedPosts = [];
+        showPinned  = true;
+        selectedSubreddits = new Set();
+        $('subFilter').className = 'sub-filter';
+        $('subTags').innerHTML = '';
 
         $('searchBtn').disabled = true;
         $('profileCard').className = 'profile-bar';
         $('accountInfo').className = 'account-info';
+        $('accountPfp').src = '';
+        $('accountName').textContent = '';
+        $('accountUsername').textContent = '';
+        $('accountStatus').textContent = '';
+        $('accountStatus').className = 'account-status';
+        $('accountAbout').textContent = '';
+        $('accountAbout').style.display = 'none';
+        $('totalKarma').textContent = '0';
+        $('postKarma').textContent = '0';
+        $('commentKarma').textContent = '0';
+        $('accountAge').textContent = '';
         $('postsList').innerHTML = '';
-        $('loadMoreBtn').style.display = 'none';
+        $('fetchNotice').style.display = 'none';
         hideAlert();
 
         try {
@@ -693,29 +812,32 @@
             }
 
             setStatus('Checking profile visibility…');
-            const profileIsHidden = await isHidden(username);
+            const { hidden: profileIsHidden, pinned } = await isHidden(username);
+            pinnedPosts = pinned;
 
             displayAccountInfo(userData, profileIsHidden);
 
-            if (!profileIsHidden) {
-                hideStatus();
-                showAlert('u/' + username + ' profile is not hidden. View at reddit.com/user/' + username, 'info');
-                $('searchBtn').disabled = false;
-                return;
+            const pinnedToggle = $('pinnedToggle');
+            if (pinnedPosts.length > 0) {
+                pinnedToggle.style.display = 'inline-flex';
+                showPinned = true;
+                pinnedToggle.classList.add('active');
+                pinnedToggle.textContent = '📌 Pinned (' + pinnedPosts.length + ')';
+            } else {
+                pinnedToggle.style.display = 'none';
             }
 
             setStatus('Fetching posts…');
-            allPosts = await fetchPosts(username, currentSort, null);
+            await fetchAllPosts(username);
             hideStatus();
 
             $('profileName').textContent = 'u/' + username;
-            updateStats();
+            $('hiddenBadge').style.display = profileIsHidden ? 'inline-flex' : 'none';
             $('profileCard').className = 'profile-bar on';
-            renderPosts(allPosts, false);
-            $('loadMoreBtn').style.display = afterToken ? 'block' : 'none';
+            $('fetchNotice').style.display = allPosts.length ? 'block' : 'none';
 
             if (!allPosts.length)
-                showAlert('Profile is hidden but no posts found in search index.', 'info');
+                showAlert('No posts found for this user.', 'info');
 
         } catch(err) {
             hideStatus();
@@ -728,7 +850,7 @@
         if (e.key === 'Enter') startSearch();
     });
 
-    // Handle browser back/forward buttons
+    // Handle browser back/forward
     let isNavigating = false;
     window.addEventListener('popstate', function() {
         if (isNavigating) return;
@@ -744,27 +866,9 @@
                 });
 
                 if ($('profileCard').classList.contains('on')) {
-                    afterToken = null;
-                    seenIds = new Set();
-                    allPosts = [];
-                    $('postsList').innerHTML = '';
-                    $('loadMoreBtn').style.display = 'none';
-                    hideAlert();
-
-                    setStatus('Fetching posts…');
-                    fetchPosts(currentUser, currentSort, null).then(posts => {
-                        allPosts = posts;
-                        hideStatus();
-                        updateStats();
-                        renderPosts(allPosts, false);
-                        $('loadMoreBtn').style.display = afterToken ? 'block' : 'none';
-                        if (!allPosts.length) showAlert('No posts found with this sort order.', 'info');
-                        isNavigating = false;
-                    }).catch(err => {
-                        hideStatus();
-                        showAlert('Error: ' + err.message, 'error');
-                        isNavigating = false;
-                    });
+                    pushParams(currentUser, currentSort);
+                    applySortToAllPosts(sort);
+                    isNavigating = false;
                 } else {
                     isNavigating = false;
                 }
@@ -780,20 +884,21 @@
             startSearch().finally(() => { isNavigating = false; });
         } else {
             currentUser = '';
+            selectedSubreddits = new Set();
             $('usernameInput').value = '';
+            $('subFilter').className = 'sub-filter';
+            $('subTags').innerHTML = '';
             $('profileCard').className = 'profile-bar';
             $('postsList').innerHTML = '';
-            $('loadMoreBtn').style.display = 'none';
             hideAlert();
-            currentSort = 'new';
+            currentSort = 'relevance';
             document.querySelectorAll('.sort-chip').forEach(c => {
-                c.classList.toggle('active', c.dataset.sort === 'new');
+                c.classList.toggle('active', c.dataset.sort === 'relevance');
             });
             isNavigating = false;
         }
     });
 
-    // Initialize on load
     (function() {
         initTheme();
         const { username, sort } = getParams();
