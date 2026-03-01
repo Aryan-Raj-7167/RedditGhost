@@ -359,7 +359,8 @@
     }
 
     async function apiFetch(url) {
-        const r = await fetch(url, {
+        const sep = url.includes('?') ? '&' : '?';
+        const r = await fetch(url + sep + '_=' + Date.now(), {
             headers: { Accept: 'application/json' },
             credentials: 'omit',
             cache: 'no-store',
