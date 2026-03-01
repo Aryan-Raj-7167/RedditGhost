@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer">
 <title>RedditGhost — Hidden Profile Finder</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -359,12 +360,11 @@
     }
 
     async function apiFetch(url) {
-        const sep = url.includes('?') ? '&' : '?';
-        const r = await fetch(url + sep + '_=' + Date.now(), {
-            headers: { Accept: 'application/json' },
-            credentials: 'omit',
-            cache: 'no-store',
-            referrerPolicy: 'no-referrer'
+        const redditPath = url.replace('https://api.reddit.com', '');
+        const sep = redditPath.includes('?') ? '&' : '?';
+        const r = await fetch('/api/reddit' + redditPath + sep + '_=' + Date.now(), {
+            headers: { 'Accept': 'application/json' },
+            cache: 'no-store'
         });
 
         const data = await r.json();
