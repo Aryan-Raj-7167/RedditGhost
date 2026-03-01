@@ -357,7 +357,9 @@
     async function apiFetch(url) {
         const r = await fetch(url, {
             headers: { Accept: 'application/json' },
-            credentials: 'omit'
+            credentials: 'omit',
+            cache: 'no-store',
+            referrerPolicy: 'no-referrer'
         });
 
         const data = await r.json();
