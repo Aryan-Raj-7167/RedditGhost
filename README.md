@@ -2,7 +2,7 @@
 
 Find posts from Reddit accounts that have hidden their profile.
 
-**Live site:** [aryan-raj-7167.github.io/RedditGhost/](https://aryan-raj-7167.github.io/RedditGhost/)
+**Live site:** [redditghost.pages.dev](https://redditghost.pages.dev)
 
 ---
 
@@ -36,6 +36,7 @@ Enter a username and it will show account info, detect if the profile is hidden,
 2. Fetches up to 100 submitted posts via `/user/{username}/submitted` to check if the profile is hidden and detect pinned posts
 3. All posts are fetched via Reddit's global search index using `author:"username"` with full auto-pagination
 4. Sorting and subreddit filtering happen entirely client-side — no extra API calls
+5. All Reddit API requests are routed through a Cloudflare Pages Function proxy to avoid browser-level blocking
 
 No login required. Uses Reddit's public API only.
 
@@ -52,6 +53,39 @@ Open the site, type in a Reddit username and hit **Search**.
 
 ---
 
+## Deployment
+
+This project is deployed on **Cloudflare Pages** (not GitHub Pages) due to Reddit's API blocking browser requests that include a `Referer` header pointing to known scraper sites.
+
+### Folder structure
+
+```
+RedditGhost/
+├── index.html
+└── functions/
+    └── api/
+        └── reddit/
+            └── [[path]].js
+```
+
+### How the proxy works
+
+All API calls in `index.html` go to `/api/reddit/...` (a relative path on the same domain). The Cloudflare Pages Function at `functions/api/reddit/[[path]].js` catches these requests and forwards them to `https://api.reddit.com` server-side — with a clean User-Agent and no Referer header. Reddit never sees the browser's headers.
+
+```js
+// functions/api/reddit/[[path]].js
+const redditUrl = 'https://api.reddit.com' + path + url.search;
+
+const response = await fetch(redditUrl, {
+    headers: {
+        'Accept': 'application/json',
+        'User-Agent': 'RedditGhost/1.0 (by u/Aryan_Raj_7167)',
+    },
+});
+```
+
+---
+
 ## For Developers
 
 ### API endpoints used
@@ -62,7 +96,7 @@ Open the site, type in a Reddit username and hit **Search**.
 | `GET /user/{username}/submitted?limit=100` | Check if profile is hidden, detect pinned posts |
 | `GET /search/?q=author:"username"&sort=relevance` | Fetch all posts via Reddit's search index |
 
-All requests go to `https://api.reddit.com` with no authentication. Requests are made with `credentials: 'omit'` to avoid sending any browser cookies.
+All requests are proxied through `/api/reddit/...` on the same Cloudflare Pages domain.
 
 ### Hidden profile detection logic
 
@@ -84,8 +118,6 @@ return { hidden: nonProfilePosts.length === 0, pinned };
 The same API call also extracts pinned posts — posts where `pinned === true` and `subreddit_type === 'user'`.
 
 ### Pinned post detection
-
-Reddit profile pins are identified by two fields on the post data:
 
 ```js
 const pinned = children.filter(c =>
@@ -135,7 +167,7 @@ while (afterToken) {
 
 ### Contributing
 
-PRs are welcome. Since it's a single-file app, all changes go in `index.html`.
+PRs are welcome. The site is a single `index.html` file. The proxy lives in `functions/api/reddit/[[path]].js`.
 
 ---
 
